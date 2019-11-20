@@ -6,7 +6,6 @@
   </v-container>
 </template>
 <style lang="scss" scoped>
-@import '~@/_variables.scss';
 
 </style>
 <script>
