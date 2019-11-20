@@ -1,24 +1,13 @@
 import Vue from 'vue'
-import VueRouter from 'vue-router'
-
-Vue.use(VueRouter)
+import { router } from './components/routes/index';
+import vuetify from './components/plugins/vuetify'
 
 import App from './components/App'
-import Welcome from './components/Welcome'
 
-const router = new VueRouter({
-    mode: 'history',
-    routes: [
-        {
-            path: '/',
-            name: 'home',
-            component: Welcome
-        },
-    ],
-});
 
 const app = new Vue({
     el: '#app',
     components: { App },
     router,
+    vuetify,
 });

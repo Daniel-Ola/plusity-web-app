@@ -1,4 +1,5 @@
  <template>
+  <div>
     <div class="flex-center position-ref full-height">
         <div class="content">
             <div  class="m-b-md">
@@ -11,6 +12,8 @@
             </div>
         </div>
     </div>
+    <PrimaryFooter />
+  </div>
 </template>
 
 <style scoped>
@@ -52,7 +55,11 @@
   </style>
   
 <script>
+import PrimaryFooter from '../components/shared/Footer/PrimaryFooter.vue';
+
   export default {
-    
+    components: {
+      PrimaryFooter
+    }
   }
 </script>
