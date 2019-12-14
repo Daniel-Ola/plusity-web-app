@@ -22,6 +22,13 @@ Route::prefix('v1')->group(function(){
     Route::group(['middleware' => 'auth:api'], function() {
 
         Route::post('getUser', 'Api\Auth\AuthController@getUser');
+
+        Route::post('/social/getUser/{token}', 'Api\Auth\AuthController@retrieveSocialUserFromToken');
     
     });
+
+    /** Callback aith Social - Facebook and Google */
+    Route::get ('/callback/facebook', 'Api\Auth\AuthController@facebookCallback');
+
+    Route::get ('/callback/google', 'Api\Auth\AuthController@googleCallback');
 });

@@ -7,6 +7,9 @@ use App\Http\Controllers\Controller;
 use App\User; 
 use Illuminate\Support\Facades\Auth; 
 use Validator;
+use Socialite;
+use App\Services\SocialGoogleAccountService;
+use App\Services\SocialFacebookAccountService;
 
 class AuthController extends Controller
 {
@@ -22,14 +25,14 @@ class AuthController extends Controller
     public function register(Request $request) {   
         $validator = Validator::make($request->all(), 
                      [ 
-                        'name' => 'required',
-                        'email' => 'required|email',
+                        'name' => 'required|unique:users',
+                        'email' => 'required|email|unique:users',
                         'password' => 'required',  
                         'c_password' => 'required|same:password', 
                     ]);
           
         if ($validator->fails()) {
-            return response()->json(['error'=>$validator->errors()], $this->errorStatus);                        
+            return response()->json(['success' => false, 'error'=>$validator->errors()], $this->errorStatus);                        
         } 
 
         try {
@@ -75,6 +78,47 @@ class AuthController extends Controller
         $user = Auth::user();
 
         return response()->json(['success' => true, 'data' => $user], $this->successStatus); 
+    }
+
+    /**
+     * 
+     * Login with facebook
+     * 
+     */
+    public function facebookCallback(SocialFacebookAccountService $service) {
+        $user = $service->createOrGetUser(Socialite::driver('facebook')->user());
+        
+        auth()->login($user);
+
+        $token =  $user->createToken('accessToken')->accessToken; 
+
+        return response()->json(['success' => true, 'data' => $user, 'token' => $token], $this->successStatus); 
+    }
+
+    /**
+     * 
+     * Login with google
+     * 
+     */
+    public function googleCallback(SocialGoogleAccountService $service) {
+        $user = $service->createOrGetUser(Socialite::driver('google')->user());
+        
+        auth()->login($user);
+
+        $token =  $user->createToken('accessToken')->accessToken; 
+
+        return response()->json(['success' => true, 'data' => $user, 'token' => $token], $this->successStatus); 
+    }
+    
+
+    /**
+     * 
+     * Retrieve user from the token
+     */
+    public function retrieveSocialUserFromToken($token) {
+        $user = Socialite::driver('github')->userFromToken($token);
+
+        return response()->json(['success' => true, 'data' => $user, 'token' => $token], $this->successStatus); 
     }
 
 }
