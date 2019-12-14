@@ -9,7 +9,7 @@ use Laravel\Socialite\Contracts\User as ProviderUser;
 class SocialGoogleAccountService
 {
   /**
-   * Create or Get User
+   * Create or Get User for Google
    * 
    */
     public function createOrGetUser(ProviderUser $providerUser)
