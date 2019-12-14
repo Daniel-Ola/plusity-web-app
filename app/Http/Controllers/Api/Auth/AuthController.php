@@ -32,15 +32,20 @@ class AuthController extends Controller
             return response()->json(['error'=>$validator->errors()], $this->errorStatus);                        
         } 
 
-        $input = $request->all();  
+        try {
+            $input = $request->all();  
 
-        $input['password'] = bcrypt($input['password']);
-
-        $user = User::create($input); 
-
-        $success['token'] =  $user->createToken('accessToken')->accessToken;
-
-        return response()->json(['success'=>$success], $this->successStatus); 
+            $input['password'] = bcrypt($input['password']);
+    
+            $user = User::create($input); 
+    
+            $token =  $user->createToken('accessToken')->accessToken;
+    
+            return response()->json(['success'=> true, 'data' => $user, 'token' => $token ], $this->successStatus); 
+        }
+        catch (\Illuminate\Database\QueryException $exception) {
+            return response()->json(['success'=> false, 'error' => $exception ], $this->errorStatus); 
+        }
     }
 
     /**
@@ -49,16 +54,15 @@ class AuthController extends Controller
      * 
      */
     public function login() { 
-        if (Auth::attempt(['email' => request('email'), 'password' => request('password')])) { 
-           
-            $user = Auth::user(); 
+            if (Auth::attempt(['email' => request('email'), 'password' => request('password')])) { 
+                $user = Auth::user(); 
 
-            $success['token'] =  $user->createToken('accessToken')->accessToken; 
+                $token =  $user->createToken('accessToken')->accessToken; 
             
-            return response()->json(['success' => $success], $this->successStatus); 
-        } else { 
-            return response()->json(['error'=>'Unauthorised'], $this->errorStatus); 
-        } 
+                return response()->json(['success' => true, 'data' => $user, 'token' => $token], $this->successStatus); 
+            } else { 
+                return response()->json(['success' => false, 'error'=>'User Not Found'], $this->errorStatus); 
+            } 
     }
 
     /**
@@ -67,10 +71,10 @@ class AuthController extends Controller
      * 
      */
     public function getUser() {
-        
+
         $user = Auth::user();
 
-        return response()->json(['success' => $user], $this->successStatus); 
+        return response()->json(['success' => true, 'data' => $user], $this->successStatus); 
     }
 
 }
