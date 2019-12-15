@@ -55,7 +55,7 @@
   </style>
   
 <script>
-import PrimaryFooter from '../components/shared/Footer/PrimaryFooter.vue';
+import PrimaryFooter from './shared/Footer/PrimaryFooter.vue';
 
   export default {
     components: {

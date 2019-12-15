@@ -115,8 +115,8 @@ class AuthController extends Controller
      * 
      * Retrieve user from the token
      */
-    public function retrieveSocialUserFromToken($token) {
-        $user = Socialite::driver('github')->userFromToken($token);
+    public function retrieveSocialUserFromToken($token, $services) {
+        $user = Socialite::driver($services)->userFromToken($token);
 
         return response()->json(['success' => true, 'data' => $user, 'token' => $token], $this->successStatus); 
     }
