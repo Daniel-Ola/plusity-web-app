@@ -121,7 +121,16 @@ return [
 
     'key' => env('APP_KEY'),
 
+    'msg91_key' => env('MSG91_KEY'),
+
+    'msg91_sender_id' => env('MSG91_SENDER_ID'),
+
     'cipher' => 'AES-256-CBC',
+
+    'twilio' => [
+        'TWILIO_AUTH_TOKEN'  => env('TWILIO_AUTH_TOKEN'),
+        'TWILIO_ACCOUNT_SID' => env('TWILIO_ACCOUNT_SID')
+    ],
 
     /*
     |--------------------------------------------------------------------------

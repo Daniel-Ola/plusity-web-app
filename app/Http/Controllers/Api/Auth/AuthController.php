@@ -10,6 +10,9 @@ use Validator;
 use Socialite;
 use App\Services\SocialGoogleAccountService;
 use App\Services\SocialFacebookAccountService;
+use App\MSG91;
+use Illuminate\Support\Facades\Session;
+use Carbon\Carbon;
 
 class AuthController extends Controller
 {
@@ -119,6 +122,74 @@ class AuthController extends Controller
         $user = Socialite::driver($services)->userFromToken($token);
 
         return response()->json(['success' => true, 'data' => $user, 'token' => $token], $this->successStatus); 
+    }
+
+    /**
+    * Sending the OTP.
+    *
+    * @return Response
+    */
+    public function sendOtp(Request $request){
+        $userId = Auth::user()->id;
+
+        $users = User::where('id', $userId)->first();
+
+        if (isset($users['phonenumber']) && $users['phonenumber'] == '' ) {
+
+            return response()->json(['success' => false, 'error' => 'Invalid Mobie Number'], $this->errorStatus);
+
+        } else {
+
+            $otp = rand(100000, 999999);
+
+            $MSG91 = new MSG91();
+
+
+            $msg91Response = $MSG91->sendSMS($otp,$users['mobile']);
+
+            if($msg91Response['error'])
+            {
+
+                return response()->json(['success' => false, 'error' => $msg91Response['message']], $this->errorStatus);
+
+            } 
+            else
+            {
+
+                Session::put('OTP', $otp);
+
+                return response()->json(['success' => true, 'message' => 'OTP is sent successfully.', 'data' => $otp], $this->successStatus);
+            }
+        }
+    }
+
+    /**
+    * Function to verify OTP.
+    *
+    * @return Response
+    */
+    public function verifyOtp(Request $request){
+
+        $enteredOtp = $request->input('otp');
+
+        $userId = Auth::user()->id;
+
+        $sessionOtp = $request->session()->get('OTP');
+
+        if($sessionOtp === $enteredOtp)
+        {
+
+            $user = User::where('id', $userId)->update(['phonenumber_verified_at' => Carbon::now()]);
+
+            Session::forget('OTP');
+
+            return response()->json(['success' => true, 'message' => 'Your Number Is Verified Successfully.', 'data' => $user], $this->successStatus);
+
+        }
+        else
+        {
+            return response()->json(['success' => false, 'error' => 'OTP does not match'], $this->errorStatus);
+        }
     }
 
 }

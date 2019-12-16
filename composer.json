@@ -9,13 +9,16 @@
     "license": "MIT",
     "require": {
         "php": "^7.1.3",
+        "authy/php": "^3.0",
         "fideloper/proxy": "^4.0",
+        "guzzlehttp/guzzle": "^6.5",
         "laravel/framework": "5.8.*",
         "laravel/passport": "^7.5",
         "laravel/socialite": "^4.3",
         "laravel/tinker": "^1.0",
         "nesbot/carbon": "^2.27",
-        "sentry/sentry-laravel": "1.5.0"
+        "sentry/sentry-laravel": "1.5.0",
+        "twilio/sdk": "^5.41"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",

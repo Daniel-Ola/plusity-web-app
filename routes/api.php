@@ -24,6 +24,10 @@ Route::prefix('v1')->group(function(){
         Route::post('getUser', 'Api\Auth\AuthController@getUser');
 
         Route::post('/social/getUser/{services}/{token}', 'Api\Auth\AuthController@retrieveSocialUserFromToken');
+
+        Route::post('/sendOtp', 'Api\Auth\AuthController@sendOtp');
+
+        Route::post('/verifyOtp', 'Api\Auth\AuthController@verifyOtp');
     
     });
 
@@ -40,4 +44,8 @@ Route::prefix('v1')->group(function(){
 
         Route::post('reset', 'Api\Auth\PasswordResetController@reset');
     });
+
+    Route::post('send-sms','SmsController@store');
+    
+    Route::post('verify-user','SmsController@verifyContact');
 });
