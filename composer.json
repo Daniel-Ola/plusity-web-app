@@ -14,7 +14,8 @@
         "laravel/passport": "^7.5",
         "laravel/socialite": "^4.3",
         "laravel/tinker": "^1.0",
-        "nesbot/carbon": "^2.27"
+        "nesbot/carbon": "^2.27",
+        "sentry/sentry-laravel": "1.5.0"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",
